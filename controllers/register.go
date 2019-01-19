@@ -13,7 +13,7 @@ type RegisterController struct {
 
 // RegisterForm new user
 func (c *RegisterController) RegisterForm() {
-	c.TplName = "register.tpl"
+	c.TplName = "register1.tpl"
 
 	log.Println("Register Form")
 }

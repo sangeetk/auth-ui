@@ -6,6 +6,10 @@ import (
 )
 
 func main() {
+	beego.AddFuncMap("siteName", siteName)
+	beego.AddFuncMap("logo", logo)
+	beego.AddFuncMap("domain", domain)
+	beego.AddFuncMap("backgroundImage", backgroundImage)
+	beego.AddFuncMap("backgroundColor", backgroundColor)
 	beego.Run()
 }
-

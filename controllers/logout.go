@@ -4,7 +4,7 @@ import (
 	"github.com/urantiatech/beego"
 )
 
-// LogoutController provides user functions
+// LogoutController provides logout functions
 type LogoutController struct {
 	beego.Controller
 }

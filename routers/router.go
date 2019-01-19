@@ -6,19 +6,25 @@ import (
 )
 
 func init() {
-	beego.Router("/register", &controllers.RegisterController{}, "get:RegisterForm")
-	beego.Router("/register", &controllers.RegisterController{}, "post:RegisterUser")
+	beego.Router("/auth/register", &controllers.RegisterController{}, "get:RegisterForm")
+	beego.Router("/auth/register", &controllers.RegisterController{}, "post:RegisterUser")
 
-	beego.Router("/confirm", &controllers.ConfirmController{}, "get:ConfirmUser")
+	beego.Router("/auth/confirm", &controllers.ConfirmController{}, "get:ConfirmUser")
 
-	beego.Router("/forgot", &controllers.ForgotController{}, "get:ForgotForm")
-	beego.Router("/forgot", &controllers.ForgotController{}, "post:ResetLink")
+	beego.Router("/auth/forgot", &controllers.ForgotController{}, "get:ForgotForm")
+	beego.Router("/auth/forgot", &controllers.ForgotController{}, "post:ResetLink")
 
-	beego.Router("/reset", &controllers.ResetController{}, "get:ResetForm")
-	beego.Router("/reset", &controllers.ResetController{}, "get:ResetPassword")
+	beego.Router("/auth/reset", &controllers.ResetController{}, "get:ResetForm")
+	beego.Router("/auth/reset", &controllers.ResetController{}, "get:ResetPassword")
 
-	beego.Router("/login", &controllers.LoginController{}, "get:LoginForm")
-	beego.Router("/login", &controllers.LoginController{}, "post:LoginUser")
+	beego.Router("/auth/login", &controllers.LoginController{}, "get:LoginForm")
+	beego.Router("/auth/login", &controllers.LoginController{}, "post:LoginUser")
 
-	beego.Router("/logout", &controllers.LogoutController{}, "get:LogoutUser")
+	beego.Router("/auth/logout", &controllers.LogoutController{}, "get:LogoutUser")
+
+	beego.ErrorController(&controllers.ErrorController{})
+
+	beego.SetStaticPath("/auth/css", "static/css")
+	beego.SetStaticPath("/auth/js", "static/js")
+	beego.SetStaticPath("/auth/font", "static/font")
 }

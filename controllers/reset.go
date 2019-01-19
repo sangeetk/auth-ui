@@ -4,7 +4,7 @@ import (
 	"github.com/urantiatech/beego"
 )
 
-// ResetController provides user functions
+// ResetController provides reset functions
 type ResetController struct {
 	beego.Controller
 }

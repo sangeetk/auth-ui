@@ -4,7 +4,7 @@ import (
 	"github.com/urantiatech/beego"
 )
 
-// ForgotController provides user functions
+// ForgotController provides forgot password functions
 type ForgotController struct {
 	beego.Controller
 }

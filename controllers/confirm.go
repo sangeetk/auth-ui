@@ -4,7 +4,7 @@ import (
 	"github.com/urantiatech/beego"
 )
 
-// ConfirmController provides user functions
+// ConfirmController provides new user confirmation functions
 type ConfirmController struct {
 	beego.Controller
 }
