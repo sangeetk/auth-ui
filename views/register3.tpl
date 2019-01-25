@@ -5,7 +5,7 @@
 
 	<div class="col s12 z-depth-4 card-panel">
 
-		<form method="POST" class="login-form" name="register" action="/register">
+		<form method="POST" class="login-form" name="register" action="/auth/register">
 			<input id="step" name="step" type="hidden" ref="step" value="3">
             <input type="hidden" name="gorilla.csrf.Token" value="{{ .CSRFToken }}">
             <input type="hidden" name="token" value="{{ .Token }}">
@@ -15,6 +15,8 @@
 					<h4>Register (cont.)</h4>
 				</div>
 			</div>
+
+			{{ .Error }}
 
 			<div class="row margin">
 				<div class="input-field col s12">

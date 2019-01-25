@@ -10,8 +10,8 @@
 			<div class="row">
 				<div class="input-field col s12 center">
 					<img src="{{ logo }}" alt="" class="circle responsive-img valign profile-image-login">
-					<h4 class="header">Error 404 !!</h4>
-					<h6>Page Not Found</h6>
+					<h4 class="header">Error 500 !!</h4>
+					<h6>Internal Server Error</h6>
 				</div>
 			</div>
 
@@ -28,6 +28,8 @@
 					<a href="/auth/register" class="btn waves-effect waves-light col s12">Register</a>
 				</div>
 			</div>
+
+
 
 		</form>
 

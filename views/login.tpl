@@ -10,7 +10,7 @@
 
 			<div class="row">
 				<div class="input-field col s12 center">
-					<a href="/"><img src="{{ logo }}" alt="" class=""></a>
+					<a href="/"><img src="{{ logo }}" alt="" class="" height="100px" width="auto"></a>
 					<p class="center login-form-text">{{ siteName }}</p>
 				</div>
 			</div>

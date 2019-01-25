@@ -12,11 +12,11 @@ type ErrorController struct {
 // Error404 handles 404
 func (c *ErrorController) Error404() {
 	c.Data["content"] = "page not found"
-	c.TplName = "page/404.tpl"
+	c.TplName = "404.tpl"
 }
 
 // Error500 handles 500
 func (c *ErrorController) Error500() {
 	c.Data["content"] = "internal server error"
-	c.TplName = "page/500.tpl"
+	c.TplName = "500.tpl"
 }

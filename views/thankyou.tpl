@@ -5,29 +5,36 @@
 
 	<div class="col s12 z-depth-4 card-panel">
 
-		<form class="login-form" action="/auth/login">
+		<form class="login-form" action="/">
 
 			<div class="row">
 				<div class="input-field col s12 center">
 					<img src="{{ logo }}" alt="" class="circle responsive-img valign profile-image-login">
-					<h4 class="header">Error 404 !!</h4>
-					<h6>Page Not Found</h6>
+					<h4 class="header">Thank You !!</h4>
+				</div>
+			</div>
+
+			<div class="row margin">
+				<div class="input-field col s12">
+					<p>
+						{{ .Message }}
+					</p>
+					<br>
+					<br>
 				</div>
 			</div>
 
 			<div class="row">
-				<div class="input-field col s12">
-					<a href="/" class="btn waves-effect waves-light col s12">Home</a>
-				</div>
-
 				<div class="input-field col s6">
 					<a href="/auth/login" class="btn waves-effect waves-light col s12">Login</a>
 				</div>
 
 				<div class="input-field col s6">
-					<a href="/auth/register" class="btn waves-effect waves-light col s12">Register</a>
+					<a href="/" class="btn waves-effect waves-light col s12">Home</a>
 				</div>
 			</div>
+
+
 
 		</form>
 
@@ -35,3 +42,4 @@
 	
 </div>
 {{ end }}
+

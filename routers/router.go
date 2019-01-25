@@ -26,5 +26,6 @@ func init() {
 
 	beego.SetStaticPath("/auth/css", "static/css")
 	beego.SetStaticPath("/auth/js", "static/js")
+	beego.SetStaticPath("/auth/img", "static/img")
 	beego.SetStaticPath("/auth/font", "static/font")
 }
