@@ -1,12 +1,16 @@
 package controllers
 
 import (
+	"bytes"
+	"fmt"
 	"log"
 	"net/mail"
 	"os"
 	"time"
 
 	authapi "git.urantiatech.com/auth/auth/api"
+	"git.urantiatech.com/auth/login/emails"
+	mailapi "git.urantiatech.com/mail/mail/api"
 	"github.com/urantiatech/beego"
 )
 
@@ -73,6 +77,26 @@ func (c *RegisterController) RegisterUser() {
 			c.TplName = "register1.tpl"
 			return
 		}
+
+		// Preapre Account Activation mail
+		data := make(map[string]interface{})
+		data["Domain"] = os.Getenv("DOMAIN")
+		data["Token"] = resp.ConfirmToken
+		data["Name"] = resp.FirstName
+
+		var html bytes.Buffer
+		if err := emails.Emails[emails.Activation].Execute(&html, data); err != nil {
+			log.Fatal(err.Error())
+		}
+
+		// Send the Account Activation mail
+		mail := mailapi.Mail{
+			From:    fmt.Sprintf("%s <contact@%s>", os.Getenv("SITE_NAME"), os.Getenv("DOMAIN")),
+			To:      fmt.Sprintf("%s", resp.Email),
+			Subject: fmt.Sprintf("%s new account confirmation", os.Getenv("SITE_NAME")),
+			HTML:    html.String(),
+		}
+		err = mailapi.SendMail(&mail, os.Getenv("MAIL_SVC"))
 
 		// Render the next form
 		c.Data["Token"] = resp.UpdateToken
