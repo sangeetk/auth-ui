@@ -15,6 +15,8 @@
 				</div>
 			</div>
 
+			{{ template "flash.tpl" . }}
+
 			<div class="row margin">
 				<div class="input-field col s12">
 					<i class="mdi-communication-email prefix"></i>

@@ -16,11 +16,15 @@ type ResetController struct {
 
 // ResetForm shows reset form
 func (c *ResetController) ResetForm() {
+	c.Data["Flash"] = beego.ReadFromRequest(&c.Controller).Data
+
 	// Show the password rest form on GET request
+	flash := beego.NewFlash()
+
 	token := c.GetString("token")
 	if token == "" {
-		flash := beego.NewFlash()
 		flash.Error("Invalid link.")
+		flash.Store(&c.Controller)
 		c.Redirect("/", http.StatusSeeOther)
 		return
 	}
@@ -32,7 +36,11 @@ func (c *ResetController) ResetForm() {
 
 // ResetPassword resets the password
 func (c *ResetController) ResetPassword() {
+	c.Data["Flash"] = beego.ReadFromRequest(&c.Controller).Data
+
 	var req authapi.ResetRequest
+	flash := beego.NewFlash()
+
 	req.ResetToken = c.GetString("token")
 	req.NewPassword = c.GetString("password")
 	password2 := c.GetString("password2")
@@ -41,7 +49,8 @@ func (c *ResetController) ResetPassword() {
 	log.Printf("Password2=[%s]\n", password2)
 
 	if req.NewPassword != password2 {
-		c.Data["Error"] = "Passwords do not match"
+		flash.Error("Passwords do not match")
+		flash.Store(&c.Controller)
 		c.Data["Token"] = req.ResetToken
 		c.TplName = "reset.tpl"
 		return
@@ -49,24 +58,23 @@ func (c *ResetController) ResetPassword() {
 
 	resp, err := authapi.Reset(&req, os.Getenv("AUTH_SVC"))
 	if err != nil {
-		log.Println(err.Error())
 		// AUTH is unreachable
-		c.Data["Error"] = "Unable to process your request. Please try again after some time."
+		flash.Error("Unable to process your request. Please try again after some time.")
+		flash.Store(&c.Controller)
 		c.TplName = "error.tpl"
 		return
 	}
 
-	flash := beego.NewFlash()
-
 	// Check for registration error
 	if resp.Err != "" {
 		flash.Error("Invalid or expired link, please try <a href=\"/auth/forgot\">forgot password</a> again.")
+		flash.Store(&c.Controller)
 		c.Redirect("/", http.StatusSeeOther)
 		return
 	}
 
 	flash.Success("Your password been reset successfully, you may now <a href=\"/auth/login\">login</a> using the new password.")
+	flash.Store(&c.Controller)
 	c.Redirect("/", http.StatusSeeOther)
 	return
-
 }

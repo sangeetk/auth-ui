@@ -21,14 +21,16 @@ type RegisterController struct {
 
 // RegisterForm new user
 func (c *RegisterController) RegisterForm() {
+	c.Data["Flash"] = beego.ReadFromRequest(&c.Controller).Data
 	c.TplName = "register1.tpl"
-
-	log.Println("Register Form")
 }
 
 // RegisterUser new user
 func (c *RegisterController) RegisterUser() {
+	c.Data["Flash"] = beego.ReadFromRequest(&c.Controller).Data
+
 	var err error
+	flash := beego.NewFlash()
 	step := c.GetString("step")
 
 	// Register user
@@ -46,14 +48,16 @@ func (c *RegisterController) RegisterUser() {
 		password2 := c.GetString("password2")
 
 		if req.Password != password2 {
-			c.Data["Error"] = "Passwords do not match"
+			flash.Error("Passwords do not match")
+			flash.Store(&c.Controller)
 			c.TplName = "register1.tpl"
 			return
 		}
 
 		var e *mail.Address
 		if e, err = mail.ParseAddress(email); err != nil {
-			c.Data["Error"] = "Invalid email address"
+			flash.Error("Invalid email address")
+			flash.Store(&c.Controller)
 			c.TplName = "register1.tpl"
 			return
 		}
@@ -64,16 +68,17 @@ func (c *RegisterController) RegisterUser() {
 
 		resp, err := authapi.Register(&req, os.Getenv("AUTH_SVC"))
 		if err != nil {
-			log.Println(err.Error())
 			// AUTH is unreachable
-			c.Data["Error"] = "Unable to process your request. Please try again after some time."
+			flash.Error("Unable to process your request. Please try again after some time.")
+			flash.Store(&c.Controller)
 			c.TplName = "500.tpl"
 			return
 		}
 
 		// Check for registration error
 		if resp.Err != "" {
-			c.Data["Error"] = resp.Err
+			flash.Error(resp.Err)
+			flash.Store(&c.Controller)
 			c.TplName = "register1.tpl"
 			return
 		}
@@ -112,7 +117,8 @@ func (c *RegisterController) RegisterUser() {
 		log.Println(birthday)
 		req.Birthday, err = time.Parse("2 January, 2006", birthday)
 		if err != nil {
-			c.Data["Error"] = "Invalid Date"
+			flash.Error("Invalid Date")
+			flash.Store(&c.Controller)
 			c.TplName = "register2.tpl"
 			return
 		}
@@ -125,16 +131,17 @@ func (c *RegisterController) RegisterUser() {
 
 		resp, err := authapi.Update(&req, os.Getenv("AUTH_SVC"))
 		if err != nil {
-			log.Println(err.Error())
 			// AUTH is unreachable
-			c.Data["Error"] = "Network error"
+			flash.Error("Network error")
+			flash.Store(&c.Controller)
 			c.TplName = "500.tpl"
 			return
 		}
 
 		// Check for update error
 		if resp.Err != "" {
-			c.Data["Error"] = resp.Err
+			flash.Error(resp.Err)
+			flash.Store(&c.Controller)
 			c.TplName = "register2.tpl"
 			return
 		}
@@ -157,21 +164,23 @@ func (c *RegisterController) RegisterUser() {
 		if err != nil {
 			log.Println(err.Error())
 			// AUTH is unreachable
-			c.Data["Error"] = "Network error"
+			flash.Error("Network error")
+			flash.Store(&c.Controller)
 			c.TplName = "500.tpl"
 			return
 		}
 
 		// Check for update error
 		if resp.Err != "" {
-			c.Data["Error"] = resp.Err
+			flash.Error(resp.Err)
+			flash.Store(&c.Controller)
 			c.TplName = "500.tpl"
 			return
 		}
 
 		// Render the thankyou screen
-		c.Data["Message"] = "Further instruction to activate your account has been emailed to you."
+		flash.Success("Further instruction to activate your account has been emailed to you.")
+		flash.Store(&c.Controller)
 		c.TplName = "thankyou.tpl"
-
 	}
 }

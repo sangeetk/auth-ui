@@ -15,41 +15,50 @@ type ForgotController struct {
 
 // ForgotForm shows the form
 func (c *ForgotController) ForgotForm() {
+	c.Data["Flash"] = beego.ReadFromRequest(&c.Controller).Data
 	c.TplName = "forgot.tpl"
 }
 
 // ResetLink emails the reset link
 func (c *ForgotController) ResetLink() {
+	c.Data["Flash"] = beego.ReadFromRequest(&c.Controller).Data
+
 	var req authapi.ForgotRequest
 	var err error
+	flash := beego.NewFlash()
 
 	email := c.GetString("email")
 
 	var e *mail.Address
 	if e, err = mail.ParseAddress(email); err != nil {
-		c.Data["Error"] = "Invalid email address"
+		flash.Error("Invalid email address")
+		flash.Store(&c.Controller)
+		c.TplName = "error.tpl"
+		return
 	}
+
 	req.Username = e.Address
 	req.Domain = os.Getenv("DOMAIN")
 
 	resp, err := authapi.Forgot(&req, os.Getenv("AUTH_SVC"))
 	if err != nil {
 		// AUTH is unreachable
-		c.Data["Error"] = "Unable to process your request. Please try again after some time."
+		flash.Error("Unable to process your request. Please try again after some time.")
+		flash.Store(&c.Controller)
 		c.TplName = "error.tpl"
 		return
 	}
 
 	// Check for error
 	if resp.Err != "" {
-		c.Data["Error"] = resp.Err
+		flash.Error(resp.Err)
+		flash.Store(&c.Controller)
 		c.TplName = "error.tpl"
 		return
 	}
 
 	// Render the next form
-	c.Data["Message"] = "Further instruction to reset your password has been emailed to you."
+	flash.Success("Further instruction to reset your password has been emailed to you.")
+	flash.Store(&c.Controller)
 	c.TplName = "thankyou.tpl"
-	return
-
 }

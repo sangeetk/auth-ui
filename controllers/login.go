@@ -16,12 +16,17 @@ type LoginController struct {
 
 // LoginForm provides login form
 func (c *LoginController) LoginForm() {
+	c.Data["Flash"] = beego.ReadFromRequest(&c.Controller).Data
 	c.TplName = "login.tpl"
 }
 
 // LoginUser authenticates the user
 func (c *LoginController) LoginUser() {
+	c.Data["Flash"] = beego.ReadFromRequest(&c.Controller).Data
+
 	var req authapi.LoginRequest
+	flash := beego.NewFlash()
+
 	req.Username = c.GetString("email")
 	req.Password = c.GetString("password")
 	req.Domain = os.Getenv("DOMAIN")
@@ -31,14 +36,17 @@ func (c *LoginController) LoginUser() {
 		log.Println(err)
 		// AUTH is unreachable
 		c.TplName = "500.tpl"
-		c.Data["Error"] = "Unable to process your request. Please try again after some time."
+		flash.Error("Unable to process your request. Please try again after some time.")
+		flash.Store(&c.Controller)
+		c.Redirect("/auth/login", http.StatusSeeOther)
 		return
 	}
 
 	// Check for login error
 	if resp.Err != "" {
-		c.Data["Error"] = resp.Err
-		c.TplName = "login.tpl"
+		flash.Error(resp.Err)
+		flash.Store(&c.Controller)
+		c.Redirect("/auth/login", http.StatusSeeOther)
 		return
 	}
 
@@ -46,8 +54,8 @@ func (c *LoginController) LoginUser() {
 	c.SetSecureCookie(os.Getenv("SECRET"), "AccessToken", resp.AccessToken)
 	c.SetSecureCookie(os.Getenv("SECRET"), "RefreshToken", resp.RefreshToken)
 
-	flash := beego.NewFlash()
-	flash.Success("Success:You have now logged in to the system.")
+	// flash.Success("You have now logged in to the system.")
+	// flash.Store(&c.Controller)
 
 	// Redirect to Home page
 	c.Redirect("/", http.StatusSeeOther)

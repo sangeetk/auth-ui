@@ -14,15 +14,7 @@
 				</div>
 			</div>
 
-			<div class="row margin">
-				<div class="input-field col s12">
-					<p>
-						{{ .Message }}
-					</p>
-					<br>
-					<br>
-				</div>
-			</div>
+			{{ template "flash.tpl" . }}
 
 			<div class="row">
 				<div class="input-field col s6">

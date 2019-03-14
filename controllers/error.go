@@ -11,12 +11,14 @@ type ErrorController struct {
 
 // Error404 handles 404
 func (c *ErrorController) Error404() {
+	c.Data["Flash"] = beego.ReadFromRequest(&c.Controller).Data
 	c.Data["content"] = "page not found"
 	c.TplName = "404.tpl"
 }
 
 // Error500 handles 500
 func (c *ErrorController) Error500() {
+	c.Data["Flash"] = beego.ReadFromRequest(&c.Controller).Data
 	c.Data["content"] = "internal server error"
 	c.TplName = "500.tpl"
 }

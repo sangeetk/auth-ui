@@ -15,6 +15,8 @@
 				</div>
 			</div>
 
+			{{ template "flash.tpl" . }}
+
 			<div class="row">
 				<div class="input-field col s12">
 					<a href="/" class="btn waves-effect waves-light col s12">Home</a>
