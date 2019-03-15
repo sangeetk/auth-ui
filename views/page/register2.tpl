@@ -1,4 +1,4 @@
-{{ template "layout.tpl" . }}
+{{ template "layout/layout.tpl" . }}
 
 {{ define "content" }}
 <div id="login-page" class="row">
@@ -16,8 +16,9 @@
 				</div>
 			</div>
 
-			{{ template "flash.tpl" . }}
-
+			{{ template "partial/flash.tpl" . }}
+			{{ template "partial/errmsg.tpl" . }}
+			
 			<div class="row margin">
 				<div class="input-field col s12">
 					<i class="mdi-social-cake prefix"></i>

@@ -1,4 +1,4 @@
-{{ template "layout.tpl" . }}
+{{ template "layout/layout.tpl" . }}
 
 {{ define "content" }}
 <div id="login-page" class="row">
