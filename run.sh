@@ -1,1 +1,1 @@
-AUTH_SVC=localhost:8000/auth SECRET=olAnxIxhmeeBeIJKtlBmWemrBZDBPBkd  MAIL_SVC=localhost:8000/mail DOMAIN=spiritualhub.org SITE_NAME="Spiritual Hub" LOGO="https://www.spiritualhub.org/images/login-logo.png" BACKGROUND_COLOR="#785CB4" bee run
+AUTH_SVC=localhost:8000/auth SECRET=olAnxIxhmeeBeIJKtlBmWemrBZDBPBkd  MAIL_SVC=localhost:8000/mail DOMAIN=spiritualhub.org SITE_NAME="Spiritual Hub" LOGO="https://www.spiritualhub.org/images/login-logo.png" TERMS="https://spiritualhub.org/terms" BACKGROUND_COLOR="#785CB4" bee run

@@ -64,6 +64,7 @@ func (c *RegisterController) RegisterUser() {
 		req.Email = e.Address
 		req.Username = req.Email
 		req.Domain = os.Getenv("DOMAIN")
+		req.CacheReq = true
 
 		resp, err := authapi.Register(&req, os.Getenv("AUTH_SVC"))
 		if err != nil {
@@ -74,6 +75,77 @@ func (c *RegisterController) RegisterUser() {
 		}
 
 		// Check for registration error
+		if resp.Err != "" {
+			c.Data["Error"] = resp.Err
+			c.TplName = "page/error.tpl"
+			return
+		}
+
+		// Render the next form
+		c.Data["Token"] = resp.CacheKey
+		c.TplName = "page/register2.tpl"
+		return
+	}
+
+	// Update user address
+	if step == "2" {
+		var req authapi.RegisterRequest
+		birthday := c.GetString("birthday")
+		log.Println(birthday)
+		req.Birthday, err = time.Parse("2 January, 2006", birthday)
+		if err != nil {
+			c.Data["Error"] = "Invalid Date"
+			c.TplName = "page/register2.tpl"
+			return
+		}
+
+		req.Address.AddressType = "default"
+		req.Address.Address1 = c.GetString("address")
+		req.Address.City = c.GetString("city")
+		req.Address.State = c.GetString("state")
+		req.Address.Country = c.GetString("country")
+		req.CacheKey = c.GetString("token")
+		req.CacheReq = true
+
+		resp, err := authapi.Register(&req, os.Getenv("AUTH_SVC"))
+		if err != nil {
+			// AUTH is unreachable
+			c.Data["Error"] = "Unable to process your request. Please try again after some time."
+			c.TplName = "page/error.tpl"
+			return
+		}
+
+		// Check for update error
+		if resp.Err != "" {
+			c.Data["Error"] = resp.Err
+			c.TplName = "page/error.tpl"
+			return
+		}
+
+		// Render the next form
+		c.Data["Token"] = resp.CacheKey
+		c.TplName = "page/register3.tpl"
+		return
+	}
+
+	// Update user profile
+	if step == "3" {
+		var req authapi.RegisterRequest
+		req.Profile = make(map[string]string)
+		req.Profile["profession"] = c.GetString("profession")
+		req.Profile["introduction"] = c.GetString("introduction")
+		req.CacheKey = c.GetString("token")
+		req.CacheReq = false
+
+		resp, err := authapi.Register(&req, os.Getenv("AUTH_SVC"))
+		if err != nil {
+			// AUTH is unreachable
+			c.Data["Error"] = "Unable to process your request. Please try again after some time."
+			c.TplName = "page/error.tpl"
+			return
+		}
+
+		// Check for update error
 		if resp.Err != "" {
 			c.Data["Error"] = resp.Err
 			c.TplName = "page/error.tpl"
@@ -99,75 +171,6 @@ func (c *RegisterController) RegisterUser() {
 			HTML:    html.String(),
 		}
 		err = mailapi.SendMail(&mail, os.Getenv("MAIL_SVC"))
-
-		// Render the next form
-		c.Data["Token"] = resp.UpdateToken
-		c.TplName = "page/register2.tpl"
-		return
-	}
-
-	// Update user address
-	if step == "2" {
-		var req authapi.UpdateRequest
-		req.UpdateToken = c.GetString("token")
-		birthday := c.GetString("birthday")
-		log.Println(birthday)
-		req.Birthday, err = time.Parse("2 January, 2006", birthday)
-		if err != nil {
-			c.Data["Error"] = "Invalid Date"
-			c.TplName = "page/register2.tpl"
-			return
-		}
-
-		req.Address.AddressType = "default"
-		req.Address.Address1 = c.GetString("address")
-		req.Address.City = c.GetString("city")
-		req.Address.State = c.GetString("state")
-		req.Address.Country = c.GetString("country")
-
-		resp, err := authapi.Update(&req, os.Getenv("AUTH_SVC"))
-		if err != nil {
-			// AUTH is unreachable
-			c.Data["Error"] = "Unable to process your request. Please try again after some time."
-			c.TplName = "page/error.tpl"
-			return
-		}
-
-		// Check for update error
-		if resp.Err != "" {
-			c.Data["Error"] = resp.Err
-			c.TplName = "page/error.tpl"
-			return
-		}
-
-		// Render the next form
-		c.Data["Token"] = resp.UpdateToken
-		c.TplName = "page/register3.tpl"
-		return
-	}
-
-	// Update user profile
-	if step == "3" {
-		var req authapi.UpdateRequest
-		req.UpdateToken = c.GetString("token")
-		req.Profile = make(map[string]string)
-		req.Profile["profession"] = c.GetString("profession")
-		req.Profile["introduction"] = c.GetString("introduction")
-
-		resp, err := authapi.Update(&req, os.Getenv("AUTH_SVC"))
-		if err != nil {
-			// AUTH is unreachable
-			c.Data["Error"] = "Unable to process your request. Please try again after some time."
-			c.TplName = "page/error.tpl"
-			return
-		}
-
-		// Check for update error
-		if resp.Err != "" {
-			c.Data["Error"] = resp.Err
-			c.TplName = "page/error.tpl"
-			return
-		}
 
 		// Render the thankyou screen
 		flash.Success("Further instruction to activate your account has been emailed to you.")

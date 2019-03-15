@@ -34,12 +34,14 @@
                 </div>
 			</div>
 
+			{{ if getenv "TERMS" }}
 			<div class="row margin">
                 <div class="input-field col s12">
-                  <input type="checkbox" name="ishuman" class="filled-in" v-model="acceptTerms" id="acceptTerms" ref="acceptTerms" required/>
-                  <label for="acceptTerms">Accept Terms and Conditions</label>
+                  <input type="checkbox" name="acceptTerms" class="filled-in" v-model="acceptTerms" id="acceptTerms" ref="acceptTerms" required/>
+                  <label for="acceptTerms">Accept <a href="{{ getenv "TERMS" }}">Terms &amp; Conditions</a></label>
                 </div>
 			</div>
+			{{ end }}
 
 			<br>
 

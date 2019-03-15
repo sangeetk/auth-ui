@@ -29,6 +29,9 @@ func (c *LoginController) LoginUser() {
 	req.Username = c.GetString("email")
 	req.Password = c.GetString("password")
 	req.Domain = os.Getenv("DOMAIN")
+	if c.GetString("remember") == "on" {
+		req.RememberMe = true
+	}
 
 	resp, err := authapi.Login(&req, os.Getenv("AUTH_SVC"))
 	if err != nil {

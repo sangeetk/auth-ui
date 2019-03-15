@@ -51,9 +51,8 @@ func (c *ForgotController) ResetLink() {
 
 	// Check for error
 	if resp.Err != "" {
-		flash.Error(resp.Err)
-		flash.Store(&c.Controller)
-		c.TplName = "error.tpl"
+		c.Data["Error"] = resp.Err
+		c.TplName = "page/error.tpl"
 		return
 	}
 
