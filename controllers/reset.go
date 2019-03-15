@@ -30,7 +30,7 @@ func (c *ResetController) ResetForm() {
 	}
 
 	c.Data["Token"] = token
-	c.TplName = "reset.tpl"
+	c.TplName = "page/reset.tpl"
 	return
 }
 
@@ -49,10 +49,9 @@ func (c *ResetController) ResetPassword() {
 	log.Printf("Password2=[%s]\n", password2)
 
 	if req.NewPassword != password2 {
-		flash.Error("Passwords do not match")
-		flash.Store(&c.Controller)
+		c.Data["Error"] = "Passwords do not match"
 		c.Data["Token"] = req.ResetToken
-		c.TplName = "reset.tpl"
+		c.TplName = "page/reset.tpl"
 		return
 	}
 
@@ -61,7 +60,7 @@ func (c *ResetController) ResetPassword() {
 		// AUTH is unreachable
 		flash.Error("Unable to process your request. Please try again after some time.")
 		flash.Store(&c.Controller)
-		c.TplName = "error.tpl"
+		c.Redirect("/", http.StatusSeeOther)
 		return
 	}
 

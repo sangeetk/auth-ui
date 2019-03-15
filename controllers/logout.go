@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 	"os"
 
@@ -24,10 +23,7 @@ func (c *LogoutController) LogoutUser() {
 	req.AccessToken, _ = c.GetSecureCookie(os.Getenv("SECRET"), "AccessToken")
 	req.RefreshToken, _ = c.GetSecureCookie(os.Getenv("SECRET"), "RefreshToken")
 
-	resp, err := authapi.Logout(&req, os.Getenv("AUTH_SVC"))
-	if err != nil {
-		log.Println(resp.Err)
-	}
+	_, _ = authapi.Logout(&req, os.Getenv("AUTH_SVC"))
 
 	// Set Access & Refresh tokens to empty values
 	c.SetSecureCookie(os.Getenv("SECRET"), "AccessToken", "")

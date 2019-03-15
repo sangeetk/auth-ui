@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"net/http"
 	"net/mail"
 	"os"
 
@@ -16,7 +17,7 @@ type ForgotController struct {
 // ForgotForm shows the form
 func (c *ForgotController) ForgotForm() {
 	c.Data["Flash"] = beego.ReadFromRequest(&c.Controller).Data
-	c.TplName = "forgot.tpl"
+	c.TplName = "page/forgot.tpl"
 }
 
 // ResetLink emails the reset link
@@ -31,9 +32,8 @@ func (c *ForgotController) ResetLink() {
 
 	var e *mail.Address
 	if e, err = mail.ParseAddress(email); err != nil {
-		flash.Error("Invalid email address")
-		flash.Store(&c.Controller)
-		c.TplName = "error.tpl"
+		c.Data["Error"] = "Invalid email address"
+		c.TplName = "page/forgot.tpl"
 		return
 	}
 
@@ -45,7 +45,7 @@ func (c *ForgotController) ResetLink() {
 		// AUTH is unreachable
 		flash.Error("Unable to process your request. Please try again after some time.")
 		flash.Store(&c.Controller)
-		c.TplName = "error.tpl"
+		c.Redirect("/", http.StatusSeeOther)
 		return
 	}
 
@@ -60,5 +60,5 @@ func (c *ForgotController) ResetLink() {
 	// Render the next form
 	flash.Success("Further instruction to reset your password has been emailed to you.")
 	flash.Store(&c.Controller)
-	c.TplName = "thankyou.tpl"
+	c.Redirect("/", http.StatusSeeOther)
 }

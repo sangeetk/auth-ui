@@ -35,8 +35,8 @@
 
 			<div class="row margin">
                 <div class="input-field col s12">
-                  <input type="checkbox" name="ishuman" class="filled-in" v-model="isHuman" id="isHuman" ref="isHuman" required/>
-                  <label for="isHuman">I am a Human Being</label>
+                  <input type="checkbox" name="ishuman" class="filled-in" v-model="acceptTerms" id="acceptTerms" ref="acceptTerms" required/>
+                  <label for="acceptTerms">Accept Terms and Conditions</label>
                 </div>
 			</div>
 

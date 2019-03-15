@@ -15,7 +15,8 @@
 				</div>
 			</div>
 
-			{{ template "flash.tpl" . }}
+			{{ template "partial/flash.tpl" . }}
+			{{ template "partial/errmsg.tpl" . }}
 
 			<div class="row margin">
 				<div class="input-field col s12">

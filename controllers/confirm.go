@@ -17,7 +17,6 @@ type ConfirmController struct {
 func (c *ConfirmController) ConfirmUser() {
 	c.Data["Flash"] = beego.ReadFromRequest(&c.Controller).Data
 
-	c.TplName = "confirm.tpl"
 	flash := beego.NewFlash()
 
 	token := c.GetString("token")
@@ -38,14 +37,14 @@ func (c *ConfirmController) ConfirmUser() {
 		return
 	}
 	if resp.Err != "" {
-		flash.Error("Invalid or expired link, sorry cannot activate the account.")
+		flash.Error("Invalid or expired link, unable to activate the account.")
 		flash.Store(&c.Controller)
 		c.Redirect("/", http.StatusSeeOther)
 		return
 	}
 
-	flash.Success("Account successfully activated, you may now <a href=\"/auth/login\">login</a> to your account.")
+	flash.Success("Account activated")
 	flash.Store(&c.Controller)
-	c.Redirect("/", http.StatusSeeOther)
+	c.Redirect("/auth/login", http.StatusSeeOther)
 	return
 }

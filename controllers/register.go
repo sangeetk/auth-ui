@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"log"
+	"net/http"
 	"net/mail"
 	"os"
 	"time"
@@ -22,7 +23,7 @@ type RegisterController struct {
 // RegisterForm new user
 func (c *RegisterController) RegisterForm() {
 	c.Data["Flash"] = beego.ReadFromRequest(&c.Controller).Data
-	c.TplName = "register1.tpl"
+	c.TplName = "page/register1.tpl"
 }
 
 // RegisterUser new user
@@ -48,17 +49,15 @@ func (c *RegisterController) RegisterUser() {
 		password2 := c.GetString("password2")
 
 		if req.Password != password2 {
-			flash.Error("Passwords do not match")
-			flash.Store(&c.Controller)
-			c.TplName = "register1.tpl"
+			c.Data["Error"] = "Passwords do not match"
+			c.TplName = "page/register1.tpl"
 			return
 		}
 
 		var e *mail.Address
 		if e, err = mail.ParseAddress(email); err != nil {
-			flash.Error("Invalid email address")
-			flash.Store(&c.Controller)
-			c.TplName = "register1.tpl"
+			c.Data["Error"] = "Invalid email address"
+			c.TplName = "page/register1.tpl"
 			return
 		}
 
@@ -69,17 +68,15 @@ func (c *RegisterController) RegisterUser() {
 		resp, err := authapi.Register(&req, os.Getenv("AUTH_SVC"))
 		if err != nil {
 			// AUTH is unreachable
-			flash.Error("Unable to process your request. Please try again after some time.")
-			flash.Store(&c.Controller)
-			c.TplName = "500.tpl"
+			c.Data["Error"] = "Unable to process your request. Please try again after some time."
+			c.TplName = "page/error.tpl"
 			return
 		}
 
 		// Check for registration error
 		if resp.Err != "" {
-			flash.Error(resp.Err)
-			flash.Store(&c.Controller)
-			c.TplName = "register1.tpl"
+			c.Data["Error"] = resp.Err
+			c.TplName = "page/error.tpl"
 			return
 		}
 
@@ -105,7 +102,7 @@ func (c *RegisterController) RegisterUser() {
 
 		// Render the next form
 		c.Data["Token"] = resp.UpdateToken
-		c.TplName = "register2.tpl"
+		c.TplName = "page/register2.tpl"
 		return
 	}
 
@@ -117,9 +114,8 @@ func (c *RegisterController) RegisterUser() {
 		log.Println(birthday)
 		req.Birthday, err = time.Parse("2 January, 2006", birthday)
 		if err != nil {
-			flash.Error("Invalid Date")
-			flash.Store(&c.Controller)
-			c.TplName = "register2.tpl"
+			c.Data["Error"] = "Invalid Date"
+			c.TplName = "page/register2.tpl"
 			return
 		}
 
@@ -132,23 +128,21 @@ func (c *RegisterController) RegisterUser() {
 		resp, err := authapi.Update(&req, os.Getenv("AUTH_SVC"))
 		if err != nil {
 			// AUTH is unreachable
-			flash.Error("Network error")
-			flash.Store(&c.Controller)
-			c.TplName = "500.tpl"
+			c.Data["Error"] = "Unable to process your request. Please try again after some time."
+			c.TplName = "page/error.tpl"
 			return
 		}
 
 		// Check for update error
 		if resp.Err != "" {
-			flash.Error(resp.Err)
-			flash.Store(&c.Controller)
-			c.TplName = "register2.tpl"
+			c.Data["Error"] = resp.Err
+			c.TplName = "page/error.tpl"
 			return
 		}
 
 		// Render the next form
 		c.Data["Token"] = resp.UpdateToken
-		c.TplName = "register3.tpl"
+		c.TplName = "page/register3.tpl"
 		return
 	}
 
@@ -162,25 +156,22 @@ func (c *RegisterController) RegisterUser() {
 
 		resp, err := authapi.Update(&req, os.Getenv("AUTH_SVC"))
 		if err != nil {
-			log.Println(err.Error())
 			// AUTH is unreachable
-			flash.Error("Network error")
-			flash.Store(&c.Controller)
-			c.TplName = "500.tpl"
+			c.Data["Error"] = "Unable to process your request. Please try again after some time."
+			c.TplName = "page/error.tpl"
 			return
 		}
 
 		// Check for update error
 		if resp.Err != "" {
-			flash.Error(resp.Err)
-			flash.Store(&c.Controller)
-			c.TplName = "500.tpl"
+			c.Data["Error"] = resp.Err
+			c.TplName = "page/error.tpl"
 			return
 		}
 
 		// Render the thankyou screen
 		flash.Success("Further instruction to activate your account has been emailed to you.")
 		flash.Store(&c.Controller)
-		c.TplName = "thankyou.tpl"
+		c.Redirect("/", http.StatusSeeOther)
 	}
 }

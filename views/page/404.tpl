@@ -10,15 +10,17 @@
 			<div class="row">
 				<div class="input-field col s12 center">
 					<img src="{{ logo }}" alt="" class="circle responsive-img valign profile-image-login">
-					<h4 class="header">Error !!</h4>
+					<h4 class="header">Error 404 !!</h4>
+					<h6>Page Not Found</h6>
 				</div>
 			</div>
 
 			{{ template "flash.tpl" . }}
-
+			{{ template "errmsg.tpl" . }}
+			
 			<div class="row">
 				<div class="input-field col s12">
-					<a href="/auth/forgot" class="btn waves-effect waves-light col s12">Forgot Password?</a>
+					<a href="/" class="btn waves-effect waves-light col s12">Home</a>
 				</div>
 
 				<div class="input-field col s6">
@@ -26,11 +28,9 @@
 				</div>
 
 				<div class="input-field col s6">
-					<a href="/" class="btn waves-effect waves-light col s12">Home</a>
+					<a href="/auth/register" class="btn waves-effect waves-light col s12">Register</a>
 				</div>
 			</div>
-
-
 
 		</form>
 
