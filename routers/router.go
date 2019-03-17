@@ -15,7 +15,7 @@ func init() {
 	beego.Router("/auth/forgot", &controllers.ForgotController{}, "post:ResetLink")
 
 	beego.Router("/auth/reset", &controllers.ResetController{}, "get:ResetForm")
-	beego.Router("/auth/reset", &controllers.ResetController{}, "get:ResetPassword")
+	beego.Router("/auth/reset", &controllers.ResetController{}, "post:ResetPassword")
 
 	beego.Router("/auth/login", &controllers.LoginController{}, "get:LoginForm")
 	beego.Router("/auth/login", &controllers.LoginController{}, "post:LoginUser")

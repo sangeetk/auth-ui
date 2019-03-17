@@ -1,11 +1,16 @@
 package controllers
 
 import (
+	"bytes"
+	"fmt"
+	"log"
 	"net/http"
 	"net/mail"
 	"os"
 
 	authapi "git.urantiatech.com/auth/auth/api"
+	"git.urantiatech.com/auth/login/emails"
+	mailapi "git.urantiatech.com/mail/mail/api"
 	"github.com/urantiatech/beego"
 )
 
@@ -51,10 +56,34 @@ func (c *ForgotController) ResetLink() {
 
 	// Check for error
 	if resp.Err != "" {
-		c.Data["Error"] = resp.Err
+		if resp.Err == "Not Found" {
+			c.Data["Error"] = "This email address is not registered in our database."
+		} else {
+			c.Data["Error"] = resp.Err
+		}
 		c.TplName = "page/error.tpl"
 		return
 	}
+
+	// Preapre PasswordReset link mail
+	data := make(map[string]interface{})
+	data["Domain"] = os.Getenv("DOMAIN")
+	data["Token"] = resp.ResetToken
+	data["Name"] = resp.FirstName
+
+	var html bytes.Buffer
+	if err := emails.Emails[emails.PasswordReset].Execute(&html, data); err != nil {
+		log.Fatal(err.Error())
+	}
+
+	// Send the PasswordReset link mail
+	mail := mailapi.Mail{
+		From:    fmt.Sprintf("%s <contact@%s>", os.Getenv("SITE_NAME"), os.Getenv("DOMAIN")),
+		To:      fmt.Sprintf("%s", resp.Email),
+		Subject: fmt.Sprintf("%s password reset link", os.Getenv("SITE_NAME")),
+		HTML:    html.String(),
+	}
+	err = mailapi.SendMail(&mail, os.Getenv("MAIL_SVC"))
 
 	// Render the next form
 	flash.Success("Further instruction to reset your password has been emailed to you.")

@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>SpiritualHub activation mail.</title>
+    <title>{{ .SiteName }} activation mail.</title>
     
     
   </head>
@@ -32,7 +32,7 @@ width: 100% !important; height: 100%; margin: 0; line-height: 1.4; background-co
             <tr>
               <td class="email-masthead" style="box-sizing: border-box; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; padding: 25px 0; word-break: break-word;" align="center">
                 <a href="https://www.{{.Domain}}" class="email-masthead_name" style="box-sizing: border-box; color: #bbbfc3; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 16px; font-weight: bold; text-decoration: none; text-shadow: 0 1px 0 white;">
-        Spiritual Hub
+        {{ .SiteName }}
       </a>
               </td>
             </tr>

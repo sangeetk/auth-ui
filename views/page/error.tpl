@@ -18,9 +18,6 @@
 			{{ template "partial/errmsg.tpl" . }}
 
 			<div class="row">
-				<div class="input-field col s12">
-					<a href="/auth/forgot" class="btn waves-effect waves-light col s12">Forgot Password?</a>
-				</div>
 
 				<div class="input-field col s6">
 					<a href="/auth/login" class="btn waves-effect waves-light col s12">Login</a>
@@ -29,6 +26,15 @@
 				<div class="input-field col s6">
 					<a href="/" class="btn waves-effect waves-light col s12">Home</a>
 				</div>
+
+				<div class="input-field col s6 m6 l6">
+					<p class="margin medium-small"><a href="/auth/register">Register Now!</a></p>
+				</div>
+
+				<div class="input-field col s6 m6 l6">
+					<p class="margin right-align medium-small"><a href="/auth/forgot">Forgot password ?</a></p>
+				</div>
+
 			</div>
 
 

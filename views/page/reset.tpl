@@ -5,8 +5,9 @@
 
 	<div class="col s12 z-depth-4 card-panel">
 	
-		<form class="login-form" action="/auth/login" method="POST">
+		<form class="login-form" action="/auth/reset" method="POST">
             <input type="hidden" name="gorilla.csrf.Token" value="{{ .CSRFToken }}">
+            <input type="hidden" name="token" value="{{ .Token }}">
 
 			<div class="row">
 				<div class="input-field col s12 center">
