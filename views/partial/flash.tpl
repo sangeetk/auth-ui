@@ -1,6 +1,4 @@
 {{ with .Flash }}
-<div class="row margin">
-    <div class="input-field col s12">
     {{ if .success }}
     <p class="center green-text"> {{ .success }}</p>
     {{ end }}
@@ -13,6 +11,4 @@
     {{ if .error }}
     <p class="center red-text"> {{ .error }}</p>
     {{ end }}
-    </div>
-</div>
 {{ end }}

@@ -13,12 +13,12 @@
 				<div class="input-field col s12 center">
 					<a href="/"><img src="{{ logo }}" alt="" class="" height="100px" width="auto"></a>
 					<p class="center login-form-text">{{ siteName }}</p>
+					<p class="center">Update your Password</p>
+					{{ template "partial/flash.tpl" . }}
+					{{ template "partial/errmsg.tpl" . }}
 				</div>
 			</div>
 
-			{{ template "partial/flash.tpl" . }}
-			{{ template "partial/errmsg.tpl" . }}
-			
 			<div class="row margin">
 				<div class="input-field col s12">
 					<i class="mdi-action-lock-outline prefix"></i>
@@ -38,7 +38,7 @@
 			<div class="row">
 				<div class="input-field col s12">
 					<!-- a href="/user/login" class="btn waves-effect waves-light col s12">Login</a -->
-						<button class="btn waves-effect waves-light col s12" type="submit">Reset Password</button>
+						<button class="btn waves-effect waves-light col s12" type="submit">Update Password</button>
 				</div>
 				<div class="input-field col s6 m6 l6">
 					<p class="margin medium-small"><a href="/auth/login">Login</a></p>

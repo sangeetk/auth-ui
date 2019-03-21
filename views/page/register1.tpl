@@ -11,12 +11,11 @@
 			<div class="row">
 				<div class="input-field col s12 center">
 					<h4>Register</h4>
+					{{ template "partial/flash.tpl" . }}
+					{{ template "partial/errmsg.tpl" . }}
 				</div>
 			</div>
 
-			{{ template "partial/flash.tpl" . }}
-			{{ template "partial/errmsg.tpl" . }}
-			
 			<div class="row margin">
 				<div class="input-field col s6">
 					<i class="mdi-social-person-outline prefix"></i>

@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"bytes"
-	"fmt"
 	"log"
 	"net/http"
 	"net/mail"
@@ -10,8 +8,6 @@ import (
 	"time"
 
 	authapi "git.urantiatech.com/auth/auth/api"
-	"git.urantiatech.com/auth/login/emails"
-	mailapi "git.urantiatech.com/mail/mail/api"
 	"github.com/urantiatech/beego"
 )
 
@@ -36,7 +32,7 @@ func (c *RegisterController) RegisterUser() {
 
 	// Register user
 	if step == "1" {
-		var req authapi.RegisterRequest
+		var req = &authapi.RegisterRequest{}
 		var err error
 
 		req.FirstName = c.GetString("fname")
@@ -66,9 +62,10 @@ func (c *RegisterController) RegisterUser() {
 		req.Domain = os.Getenv("DOMAIN")
 		req.CacheReq = true
 
-		resp, err := authapi.Register(&req, os.Getenv("AUTH_SVC"))
+		resp, err := authapi.Register(req, os.Getenv("AUTH_SVC"))
 		if err != nil {
 			// AUTH is unreachable
+			log.Println("Error:", err)
 			c.Data["Error"] = "Unable to process your request. Please try again after some time."
 			c.TplName = "page/error.tpl"
 			return
@@ -76,8 +73,13 @@ func (c *RegisterController) RegisterUser() {
 
 		// Check for registration error
 		if resp.Err != "" {
-			c.Data["Error"] = resp.Err
-			c.TplName = "page/error.tpl"
+			if resp.Err == "Already Registered" {
+				c.Data["Error"] = "You are already registered, please login to continue"
+				c.TplName = "page/login.tpl"
+			} else {
+				c.Data["Error"] = resp.Err
+				c.TplName = "page/error.tpl"
+			}
 			return
 		}
 
@@ -89,7 +91,7 @@ func (c *RegisterController) RegisterUser() {
 
 	// Update user address
 	if step == "2" {
-		var req authapi.RegisterRequest
+		var req = &authapi.RegisterRequest{}
 		birthday := c.GetString("birthday")
 		log.Println(birthday)
 		req.Birthday, err = time.Parse("2 January, 2006", birthday)
@@ -107,7 +109,7 @@ func (c *RegisterController) RegisterUser() {
 		req.CacheKey = c.GetString("token")
 		req.CacheReq = true
 
-		resp, err := authapi.Register(&req, os.Getenv("AUTH_SVC"))
+		resp, err := authapi.Register(req, os.Getenv("AUTH_SVC"))
 		if err != nil {
 			// AUTH is unreachable
 			c.Data["Error"] = "Unable to process your request. Please try again after some time."
@@ -130,14 +132,14 @@ func (c *RegisterController) RegisterUser() {
 
 	// Update user profile
 	if step == "3" {
-		var req authapi.RegisterRequest
+		var req = &authapi.RegisterRequest{}
 		req.Profile = make(map[string]string)
 		req.Profile["profession"] = c.GetString("profession")
 		req.Profile["introduction"] = c.GetString("introduction")
 		req.CacheKey = c.GetString("token")
 		req.CacheReq = false
 
-		resp, err := authapi.Register(&req, os.Getenv("AUTH_SVC"))
+		resp, err := authapi.Register(req, os.Getenv("AUTH_SVC"))
 		if err != nil {
 			// AUTH is unreachable
 			c.Data["Error"] = "Unable to process your request. Please try again after some time."
@@ -151,26 +153,6 @@ func (c *RegisterController) RegisterUser() {
 			c.TplName = "page/error.tpl"
 			return
 		}
-
-		// Preapre Account Activation mail
-		data := make(map[string]interface{})
-		data["Domain"] = os.Getenv("DOMAIN")
-		data["Token"] = resp.ConfirmToken
-		data["Name"] = resp.FirstName
-
-		var html bytes.Buffer
-		if err := emails.Emails[emails.Activation].Execute(&html, data); err != nil {
-			log.Fatal(err.Error())
-		}
-
-		// Send the Account Activation mail
-		mail := mailapi.Mail{
-			From:    fmt.Sprintf("%s <contact@%s>", os.Getenv("SITE_NAME"), os.Getenv("DOMAIN")),
-			To:      fmt.Sprintf("%s", resp.Email),
-			Subject: fmt.Sprintf("%s new account confirmation", os.Getenv("SITE_NAME")),
-			HTML:    html.String(),
-		}
-		err = mailapi.SendMail(&mail, os.Getenv("MAIL_SVC"))
 
 		// Render the thankyou screen
 		flash.Success("Further instruction to activate your account has been emailed to you.")

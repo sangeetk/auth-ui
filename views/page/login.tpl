@@ -12,11 +12,10 @@
 				<div class="input-field col s12 center">
 					<a href="/"><img src="{{ logo }}" alt="" class="" height="100px" width="auto"></a>
 					<p class="center login-form-text">{{ siteName }}</p>
+					{{ template "partial/flash.tpl" . }}
+					{{ template "partial/errmsg.tpl" . }}
 				</div>
 			</div>
-
-			{{ template "partial/flash.tpl" . }}
-			{{ template "partial/errmsg.tpl" . }}
 
 			<div class="row margin">
 				<div class="input-field col s12">

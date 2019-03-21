@@ -1,15 +1,11 @@
 package controllers
 
 import (
-	"bytes"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 
 	authapi "git.urantiatech.com/auth/auth/api"
-	"git.urantiatech.com/auth/login/emails"
-	mailapi "git.urantiatech.com/mail/mail/api"
 	"github.com/urantiatech/beego"
 )
 
@@ -75,25 +71,6 @@ func (c *ResetController) ResetPassword() {
 		c.Redirect("/", http.StatusSeeOther)
 		return
 	}
-
-	// Preapre Password update notification mail
-	data := make(map[string]interface{})
-	data["Domain"] = os.Getenv("DOMAIN")
-	data["Name"] = resp.FirstName
-
-	var html bytes.Buffer
-	if err := emails.Emails[emails.ResetConfirmation].Execute(&html, data); err != nil {
-		log.Fatal(err.Error())
-	}
-
-	// Send the Password update notification mail
-	mail := mailapi.Mail{
-		From:    fmt.Sprintf("%s <contact@%s>", os.Getenv("SITE_NAME"), os.Getenv("DOMAIN")),
-		To:      fmt.Sprintf("%s", resp.Email),
-		Subject: fmt.Sprintf("%s password update notification", os.Getenv("SITE_NAME")),
-		HTML:    html.String(),
-	}
-	err = mailapi.SendMail(&mail, os.Getenv("MAIL_SVC"))
 
 	flash.Success("Your password been reset successfully, you may now <a href=\"/auth/login\">login</a> using the new password.")
 	flash.Store(&c.Controller)
