@@ -22,8 +22,8 @@
 			<div class="row margin">
 				<div class="input-field col s12">
 					<i class="mdi-social-cake prefix"></i>
-					<input id="birthday" name="birthday" type="date" class="datepicker" ref="birthday">
-					<label for="birthday" class="center-align">Date of Birth</label>
+					<input id="birthday" name="birthday" type="date" class="" ref="birthday">
+					<label for="birthday" class="center-align"></label>
 				</div>
 			</div>
 
