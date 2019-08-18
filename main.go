@@ -5,7 +5,7 @@ import (
 
 	// "git.urantiatech.com/auth/login/middlewares"
 	_ "git.urantiatech.com/auth/login/routers"
-	"github.com/urantiatech/beego"
+	"github.com/astaxie/beego"
 )
 
 func main() {

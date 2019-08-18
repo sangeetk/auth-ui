@@ -8,7 +8,7 @@ import (
 	"time"
 
 	authapi "git.urantiatech.com/auth/auth/api"
-	"github.com/urantiatech/beego"
+	"github.com/astaxie/beego"
 )
 
 // RegisterController provides registration functions
@@ -94,7 +94,7 @@ func (c *RegisterController) RegisterUser() {
 		var req = &authapi.RegisterRequest{}
 		birthday := c.GetString("birthday")
 		log.Println(birthday)
-		req.Birthday, err = time.Parse("2 January, 2006", birthday)
+		req.Birthday, err = time.Parse("2006-01-02", birthday)
 		if err != nil {
 			c.Data["Error"] = "Invalid Date"
 			c.TplName = "page/register2.tpl"

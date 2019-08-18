@@ -6,7 +6,7 @@ import (
 	"os"
 
 	authapi "git.urantiatech.com/auth/auth/api"
-	"github.com/urantiatech/beego"
+	"github.com/astaxie/beego"
 )
 
 // ResetController provides reset functions

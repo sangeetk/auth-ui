@@ -2,7 +2,7 @@ package routers
 
 import (
 	"git.urantiatech.com/auth/login/controllers"
-	"github.com/urantiatech/beego"
+	"github.com/astaxie/beego"
 )
 
 func init() {

@@ -7,14 +7,8 @@ dev:
 	docker build -t localhost:32000/auth/login .
 	docker push localhost:32000/auth/login
 
-beta:
+prod:
 	GOOS=linux CGO_ENABLED=0 go build -a -installsuffix cgo -o login .
 	- docker image rm reg.urantiatech.com/auth/login 
 	docker build -t reg.urantiatech.com/auth/login .
 	docker push reg.urantiatech.com/auth/login
-
-prod:
-	GOOS=linux CGO_ENABLED=0 go build -a -installsuffix cgo -o login .
-	- docker image rm reg.urantiatech.com/auth/login:prod 
-	docker build -t reg.urantiatech.com/auth/login:prod .
-	docker push reg.urantiatech.com/auth/login:prod
