@@ -108,6 +108,7 @@ func (c *RegisterController) RegisterUser() {
 		req.Address.Country = c.GetString("country")
 		req.CacheKey = c.GetString("token")
 		req.CacheReq = true
+		req.Domain = os.Getenv("DOMAIN")
 
 		resp, err := authapi.Register(req, os.Getenv("AUTH_SVC"))
 		if err != nil {
@@ -138,6 +139,7 @@ func (c *RegisterController) RegisterUser() {
 		req.Profile["introduction"] = c.GetString("introduction")
 		req.CacheKey = c.GetString("token")
 		req.CacheReq = false
+		req.Domain = os.Getenv("DOMAIN")
 
 		resp, err := authapi.Register(req, os.Getenv("AUTH_SVC"))
 		if err != nil {
